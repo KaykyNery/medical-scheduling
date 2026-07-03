@@ -1,0 +1,96 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String        @id @default(uuid()) @db.VarChar(36)
+  email        String        @unique
+  passwordHash String
+  name         String
+  phone        String?
+  role         Role          @default(PATIENT)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  professional Professional?
+  appointments Appointment[] @relation("PatientAppointments")
+}
+
+enum Role {
+  PATIENT
+  PROFESSIONAL
+  RECEPTIONIST
+  ADMIN
+}
+
+model Professional {
+  id             String         @id @default(uuid()) @db.VarChar(36)
+  userId         String         @unique @db.VarChar(36)
+  user           User           @relation(fields: [userId], references: [id])
+  specialty      String
+  registrationId String         @unique // CRM
+  availabilities Availability[]
+  appointments   Appointment[]
+  isActive       Boolean        @default(true)
+}
+
+model Availability {
+  id             String       @id @default(uuid()) @db.VarChar(36)
+  professionalId String       @db.VarChar(36)
+  professional   Professional @relation(fields: [professionalId], references: [id])
+  dayOfWeek      Int          // 0=domingo ... 6=sabado
+  startTime      String       // "08:00"
+  endTime        String       // "18:00"
+  slotDuration   Int          @default(30)
+  isActive       Boolean      @default(true)
+}
+
+model Appointment {
+  id             String            @id @default(uuid()) @db.VarChar(36)
+  patientId      String            @db.VarChar(36)
+  patient        User              @relation("PatientAppointments", fields: [patientId], references: [id])
+  professionalId String            @db.VarChar(36)
+  professional   Professional      @relation(fields: [professionalId], references: [id])
+  startsAt       DateTime
+  endsAt         DateTime
+  status         AppointmentStatus @default(SCHEDULED)
+  notes          String?           @db.Text
+  cancelReason   String?           @db.Text
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  reminders      Reminder[]
+
+  @@index([professionalId, startsAt])
+  @@index([patientId, startsAt])
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+  NO_SHOW
+}
+
+model Reminder {
+  id            String      @id @default(uuid()) @db.VarChar(36)
+  appointmentId String      @db.VarChar(36)
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
+  type          String      // "EMAIL" | "SMS"
+  scheduledAt   DateTime
+  sentAt        DateTime?
+  status        String      @default("PENDING")
+}
+
+model Procedure {
+  id          String   @id @default(uuid()) @db.VarChar(36)
+  name        String
+  description String?  @db.Text
+  duration    Int
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}

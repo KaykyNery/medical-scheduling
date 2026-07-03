@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f3f7f5;
+  --foreground: #1c2a23;
+  --card: #ffffff;
+  --card-foreground: #1c2a23;
+  --primary: #009057;
+  --primary-foreground: #ffffff;
+  --secondary: #e8f7f0;
+  --secondary-foreground: #009057;
+  --muted: #f1fbf7;
+  --muted-foreground: #5c6f65;
+  --accent: #e8f7f0;
+  --accent-foreground: #009057;
+  --border: #e0e6e3;
+  --input: #e0e6e3;
+  --ring: #009057;
+}
+
+.dark {
+  --background: #0b120e;
+  --foreground: #eef3f0;
+  --card: #121e18;
+  --card-foreground: #eef3f0;
+  --primary: #00b36c;
+  --primary-foreground: #0b120e;
+  --secondary: #172b20;
+  --secondary-foreground: #00b36c;
+  --muted: #172b20;
+  --muted-foreground: #8fa398;
+  --accent: #172b20;
+  --accent-foreground: #00b36c;
+  --border: #1a2e24;
+  --input: #1a2e24;
+  --ring: #00b36c;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --font-sans: var(--font-outfit), sans-serif;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+/* Custom premium styles */
+.glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 144, 87, 0.1);
+}
+
+.dark .glass {
+  background: rgba(18, 30, 24, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 179, 108, 0.1);
+}
+
+/* FullCalendar styling overrides to match clinical theme */
+.fc {
+  --fc-border-color: var(--border);
+  --fc-button-bg-color: var(--primary);
+  --fc-button-border-color: var(--primary);
+  --fc-button-hover-bg-color: color-mix(in srgb, var(--primary) 85%, black);
+  --fc-button-hover-border-color: color-mix(in srgb, var(--primary) 85%, black);
+  --fc-button-active-bg-color: color-mix(in srgb, var(--primary) 70%, black);
+  --fc-button-active-border-color: color-mix(in srgb, var(--primary) 70%, black);
+}
+
+.fc-theme-standard .fc-col-header-cell {
+  background-color: var(--muted);
+  color: var(--muted-foreground);
+  font-weight: 600;
+  padding: 8px 0;
+}
+
+/* Today column and header green highlights */
+.fc .fc-day-today {
+  background-color: color-mix(in srgb, var(--primary) 5%, transparent) !important;
+}
+
+.fc .fc-col-header-cell.fc-day-today {
+  background-color: color-mix(in srgb, var(--primary) 12%, transparent) !important;
+  color: var(--primary) !important;
+}
+
+/* Event card styles overrides */
+.fc-v-event, .fc-h-event {
+  padding: 4px 6px !important;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
+  border: none !important;
+}
+
+.fc-event-main {
+  padding: 2px !important;
+}
+
+.fc-event-title {
+  font-weight: 700 !important;
+  font-size: 0.85rem !important;
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) !important;
+}
+
+.fc-event-time {
+  font-weight: 700 !important;
+  font-size: 0.75rem !important;
+  color: rgba(255, 255, 255, 0.95) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) !important;
+}
