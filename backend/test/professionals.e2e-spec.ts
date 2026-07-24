@@ -2,7 +2,11 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, ValidationPipe, ClassSerializerInterceptor } from '@nestjs/common';
+import {
+  INestApplication,
+  ValidationPipe,
+  ClassSerializerInterceptor,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import request from 'supertest';
 import { App } from 'supertest/types';
@@ -33,7 +37,9 @@ describe('ProfessionalsController (e2e)', () => {
         transform: true,
       }),
     );
-    app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+    app.useGlobalInterceptors(
+      new ClassSerializerInterceptor(app.get(Reflector)),
+    );
 
     await app.init();
     prisma = app.get(PrismaService);
@@ -207,7 +213,9 @@ describe('ProfessionalsController (e2e)', () => {
 
     it('should successfully update availability when requested by the professional', async () => {
       // Re-login professional user to get updated role claims in token!
-      const user = await prisma.user.findUnique({ where: { id: targetUserForProfId } });
+      const user = await prisma.user.findUnique({
+        where: { id: targetUserForProfId },
+      });
       const profLogin = await request(app.getHttpServer())
         .post('/auth/login')
         .send({ email: user?.email, password: 'password123' });

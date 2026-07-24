@@ -1,4 +1,10 @@
-import { Injectable, CanActivate, ExecutionContext, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 
 const ipRequests = new Map<string, { count: number; resetTime: number }>();
 
@@ -26,7 +32,7 @@ export class RegisterThrottlerGuard implements CanActivate {
     if (clientData.count >= limit) {
       throw new HttpException(
         'Muitas requisições de registro. Por favor, tente novamente após 1 minuto.',
-        HttpStatus.TOO_MANY_REQUESTS
+        HttpStatus.TOO_MANY_REQUESTS,
       );
     }
 

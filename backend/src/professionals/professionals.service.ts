@@ -1,4 +1,9 @@
-import { Injectable, ConflictException, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
 import { CreateProfessionalDto } from './dto/create-professional.dto';
 import { UpdateAvailabilityDto } from './dto/update-availability.dto';
@@ -15,7 +20,9 @@ export class ProfessionalsService {
       where: { registrationId: dto.registrationId },
     });
     if (existingByCrm) {
-      throw new ConflictException('CRM já está cadastrado por outro profissional');
+      throw new ConflictException(
+        'CRM já está cadastrado por outro profissional',
+      );
     }
 
     if (dto.userId) {
@@ -75,7 +82,9 @@ export class ProfessionalsService {
     } else {
       // Flow 2: Create new user + link professional
       if (!dto.name || !dto.email || !dto.phone) {
-        throw new BadRequestException('Nome, e-mail e telefone são obrigatórios para novo médico');
+        throw new BadRequestException(
+          'Nome, e-mail e telefone são obrigatórios para novo médico',
+        );
       }
 
       const docName = dto.name;
@@ -157,7 +166,8 @@ export class ProfessionalsService {
           dayOfWeek: item.dayOfWeek,
           startTime: item.startTime,
           endTime: item.endTime,
-          slotDuration: item.slotDuration !== undefined ? item.slotDuration : 30,
+          slotDuration:
+            item.slotDuration !== undefined ? item.slotDuration : 30,
           isActive: item.isActive !== undefined ? item.isActive : true,
         })),
       });
@@ -212,12 +222,17 @@ export class ProfessionalsService {
     }
 
     // Check if registrationId (CRM) is already in use by another professional
-    if (dto.registrationId && dto.registrationId !== professional.registrationId) {
+    if (
+      dto.registrationId &&
+      dto.registrationId !== professional.registrationId
+    ) {
       const existingByCrm = await this.prisma.professional.findUnique({
         where: { registrationId: dto.registrationId },
       });
       if (existingByCrm) {
-        throw new ConflictException('CRM já está cadastrado por outro profissional');
+        throw new ConflictException(
+          'CRM já está cadastrado por outro profissional',
+        );
       }
     }
 
@@ -230,7 +245,9 @@ export class ProfessionalsService {
             where: { email: dto.email },
           });
           if (emailExists) {
-            throw new ConflictException('E-mail já cadastrado por outro usuário');
+            throw new ConflictException(
+              'E-mail já cadastrado por outro usuário',
+            );
           }
         }
 

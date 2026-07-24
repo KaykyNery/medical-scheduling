@@ -1,4 +1,13 @@
-import { Controller, Post, Body, UseGuards, Patch, Param, Get, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  Patch,
+  Param,
+  Get,
+  Delete,
+} from '@nestjs/common';
 import { ProceduresService } from './procedures.service';
 import { CreateProcedureDto } from './dto/create-procedure.dto';
 import { UpdateProcedureDto } from './dto/update-procedure.dto';
@@ -12,7 +21,9 @@ import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 export class ProceduresController {
   constructor(private readonly proceduresService: ProceduresService) {}
 
-  @ApiOperation({ summary: 'Create a medical procedure (Admin/Receptionist only)' })
+  @ApiOperation({
+    summary: 'Create a medical procedure (Admin/Receptionist only)',
+  })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN', 'RECEPTIONIST')
@@ -36,7 +47,9 @@ export class ProceduresController {
     return this.proceduresService.update(id, dto);
   }
 
-  @ApiOperation({ summary: 'Soft delete a procedure (Admin/Receptionist only)' })
+  @ApiOperation({
+    summary: 'Soft delete a procedure (Admin/Receptionist only)',
+  })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN', 'RECEPTIONIST')

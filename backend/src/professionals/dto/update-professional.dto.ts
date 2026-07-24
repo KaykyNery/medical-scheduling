@@ -1,4 +1,12 @@
-import { IsNotEmpty, IsString, IsEmail, IsOptional, IsNumber, IsArray, ValidateNested } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  IsEmail,
+  IsOptional,
+  IsNumber,
+  IsArray,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { AvailabilityItemDto } from './create-professional.dto';

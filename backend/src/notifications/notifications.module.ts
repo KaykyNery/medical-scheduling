@@ -15,6 +15,16 @@ import { SmsProcessor } from './processors/sms.processor';
     BullModule.registerQueue({
       name: 'notifications',
     }),
+    BullModule.registerQueue({
+      name: 'email-notification-queue',
+      defaultJobOptions: {
+        attempts: 5,
+        backoff: {
+          type: 'exponential',
+          delay: 5000,
+        },
+      },
+    }),
   ],
   providers: [NotificationsService, EmailProcessor, SmsProcessor],
   exports: [NotificationsService],

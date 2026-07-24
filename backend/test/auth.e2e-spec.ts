@@ -2,7 +2,11 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, ValidationPipe, ClassSerializerInterceptor } from '@nestjs/common';
+import {
+  INestApplication,
+  ValidationPipe,
+  ClassSerializerInterceptor,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import request from 'supertest';
 import { App } from 'supertest/types';
@@ -26,7 +30,9 @@ describe('AuthController (e2e)', () => {
         transform: true,
       }),
     );
-    app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+    app.useGlobalInterceptors(
+      new ClassSerializerInterceptor(app.get(Reflector)),
+    );
 
     await app.init();
     prisma = app.get(PrismaService);
@@ -141,9 +147,7 @@ describe('AuthController (e2e)', () => {
     });
 
     it('should block unauthorized access', async () => {
-      await request(app.getHttpServer())
-        .get('/auth/me')
-        .expect(401);
+      await request(app.getHttpServer()).get('/auth/me').expect(401);
     });
   });
 

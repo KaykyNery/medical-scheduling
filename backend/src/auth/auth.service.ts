@@ -22,7 +22,7 @@ export class AuthService {
 
   async login(user: any) {
     const payload = { sub: user.id, email: user.email, role: user.role };
-    
+
     const accessToken = this.jwtService.sign(payload, {
       secret: process.env.JWT_SECRET || 'seu_secret_aqui',
       expiresIn: (process.env.JWT_EXPIRES_IN || '15m') as any,
@@ -52,7 +52,7 @@ export class AuthService {
       }
 
       const { passwordHash, ...userWithoutPassword } = user;
-      
+
       const newPayload = { sub: user.id, email: user.email, role: user.role };
 
       const newAccessToken = this.jwtService.sign(newPayload, {
@@ -71,7 +71,9 @@ export class AuthService {
         user: userWithoutPassword,
       };
     } catch (e) {
-      throw new UnauthorizedException('Token de atualização inválido ou expirado');
+      throw new UnauthorizedException(
+        'Token de atualização inválido ou expirado',
+      );
     }
   }
 }

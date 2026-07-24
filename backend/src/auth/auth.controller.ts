@@ -1,4 +1,13 @@
-import { Controller, Post, Body, UseGuards, Request, Get, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  Request,
+  Get,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
@@ -9,7 +18,13 @@ import { RegisterDto } from './dto/register.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RegisterThrottlerGuard } from './guards/register-throttler.guard';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiBody,
+} from '@nestjs/swagger';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -23,7 +38,10 @@ export class AuthController {
   @ApiResponse({ status: 201, type: UserResponseDto })
   @ApiResponse({ status: 400, description: 'Validation error' })
   @ApiResponse({ status: 409, description: 'Conflict: e-mail already exists' })
-  @ApiResponse({ status: 429, description: 'Too Many Requests: Rate limit exceeded' })
+  @ApiResponse({
+    status: 429,
+    description: 'Too Many Requests: Rate limit exceeded',
+  })
   @UseGuards(RegisterThrottlerGuard)
   @Post('register')
   async register(@Body() registerDto: RegisterDto): Promise<UserResponseDto> {
@@ -35,7 +53,10 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'Login with email and password' })
-  @ApiResponse({ status: 200, description: 'Return JWT access and refresh tokens' })
+  @ApiResponse({
+    status: 200,
+    description: 'Return JWT access and refresh tokens',
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)

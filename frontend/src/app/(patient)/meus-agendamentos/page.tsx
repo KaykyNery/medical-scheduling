@@ -161,7 +161,7 @@ export default function PatientAppointmentsPage() {
                     </div>
                   )}
 
-                  {appt.status !== 'CANCELLED' && (
+                  {appt.status !== 'CANCELLED' && appt.status !== 'COMPLETED' && new Date(appt.startsAt) > new Date() && (
                     <div className="pt-4 mt-2 border-t border-border/40">
                       {cancellingId === appt.id ? (
                         <div className="space-y-3">

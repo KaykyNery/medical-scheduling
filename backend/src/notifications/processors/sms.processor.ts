@@ -10,14 +10,25 @@ export class SmsProcessor {
   constructor(private readonly prisma: PrismaService) {
     const sid = process.env.TWILIO_ACCOUNT_SID;
     const token = process.env.TWILIO_AUTH_TOKEN;
-    if (sid && token && sid !== 'ACxxxx' && sid !== 'ACplaceholder' && token !== 'xxxx' && token !== 'placeholder') {
+    if (
+      sid &&
+      token &&
+      sid !== 'ACxxxx' &&
+      sid !== 'ACplaceholder' &&
+      token !== 'xxxx' &&
+      token !== 'placeholder'
+    ) {
       this.twilioClient = new Twilio(sid, token);
     }
   }
 
   @Process('sendSMS')
   async handleSendSMS(job: any) {
-    const { reminderId, appointmentId, type } = job.data as { reminderId: string; appointmentId: string; type: string };
+    const { reminderId, appointmentId, type } = job.data as {
+      reminderId: string;
+      appointmentId: string;
+      type: string;
+    };
 
     const appointment = await this.prisma.appointment.findUnique({
       where: { id: appointmentId },
@@ -30,7 +41,9 @@ export class SmsProcessor {
     });
 
     if (!appointment) {
-      console.warn(`[SmsProcessor] Appointment not found for ID: ${appointmentId}`);
+      console.warn(
+        `[SmsProcessor] Appointment not found for ID: ${appointmentId}`,
+      );
       return;
     }
 
@@ -46,7 +59,8 @@ export class SmsProcessor {
       return;
     }
 
-    const smsBody = `Olá ${appointment.patient.name}, lembrete de consulta com Dr(a). ` +
+    const smsBody =
+      `Olá ${appointment.patient.name}, lembrete de consulta com Dr(a). ` +
       `${appointment.professional.user.name} em 2 horas (${new Date(appointment.startsAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}). ` +
       `Sua Clínica.`;
 

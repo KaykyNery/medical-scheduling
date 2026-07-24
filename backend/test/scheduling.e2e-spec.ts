@@ -2,7 +2,11 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, ValidationPipe, ClassSerializerInterceptor } from '@nestjs/common';
+import {
+  INestApplication,
+  ValidationPipe,
+  ClassSerializerInterceptor,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import request from 'supertest';
 import { App } from 'supertest/types';
@@ -33,7 +37,9 @@ describe('SchedulingController (e2e)', () => {
         transform: true,
       }),
     );
-    app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+    app.useGlobalInterceptors(
+      new ClassSerializerInterceptor(app.get(Reflector)),
+    );
 
     await app.init();
     prisma = app.get(PrismaService);
@@ -154,7 +160,9 @@ describe('SchedulingController (e2e)', () => {
   describe('GET /scheduling/available-slots', () => {
     it('should list slots for the professional', async () => {
       const response = await request(app.getHttpServer())
-        .get(`/scheduling/available-slots?professionalId=${professionalId}&date=${futureMondayDateStr}`)
+        .get(
+          `/scheduling/available-slots?professionalId=${professionalId}&date=${futureMondayDateStr}`,
+        )
         .expect(200);
 
       expect(Array.isArray(response.body)).toBe(true);
@@ -200,7 +208,9 @@ describe('SchedulingController (e2e)', () => {
 
     it('should show the booked slot as unavailable', async () => {
       const response = await request(app.getHttpServer())
-        .get(`/scheduling/available-slots?professionalId=${professionalId}&date=${futureMondayDateStr}`)
+        .get(
+          `/scheduling/available-slots?professionalId=${professionalId}&date=${futureMondayDateStr}`,
+        )
         .expect(200);
 
       const slot = response.body.find((s: any) => s.startsAt === slotStartsAt);

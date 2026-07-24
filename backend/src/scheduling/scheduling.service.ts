@@ -1,7 +1,12 @@
-import { Injectable, ConflictException, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+  BadRequestException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
-import { CancelAppointmentDto } from './dto/cancel-appointment.dto';
 import { NotificationsService } from '../notifications/notifications.service';
 import { Appointment, AppointmentStatus } from '@prisma/client';
 
@@ -38,7 +43,15 @@ export class SchedulingService {
     const slotDuration = availability.slotDuration;
     const slots = [];
 
-    let currentSlotStart = new Date(year, month - 1, day, startHour, startMin, 0, 0);
+    let currentSlotStart = new Date(
+      year,
+      month - 1,
+      day,
+      startHour,
+      startMin,
+      0,
+      0,
+    );
     const dayEnd = new Date(year, month - 1, day, endHour, endMin, 0, 0);
 
     const dayStart = new Date(year, month - 1, day, 0, 0, 0, 0);
@@ -58,7 +71,9 @@ export class SchedulingService {
     const now = new Date();
 
     while (currentSlotStart < dayEnd) {
-      const currentSlotEnd = new Date(currentSlotStart.getTime() + slotDuration * 60 * 1000);
+      const currentSlotEnd = new Date(
+        currentSlotStart.getTime() + slotDuration * 60 * 1000,
+      );
       if (currentSlotEnd > dayEnd) {
         break;
       }
@@ -83,7 +98,9 @@ export class SchedulingService {
     return slots;
   }
 
-  async createAppointment(dto: CreateAppointmentDto & { patientId: string }): Promise<Appointment> {
+  async createAppointment(
+    dto: CreateAppointmentDto & { patientId: string },
+  ): Promise<Appointment> {
     const professional = await this.prisma.professional.findUnique({
       where: { id: dto.professionalId },
       include: { availabilities: true },
@@ -103,7 +120,9 @@ export class SchedulingService {
       (a) => a.dayOfWeek === dayOfWeek && a.isActive,
     );
     if (!availability) {
-      throw new BadRequestException('Profissional não tem horário configurado para este dia');
+      throw new BadRequestException(
+        'Profissional não tem horário configurado para este dia',
+      );
     }
 
     const slotDuration = availability.slotDuration;
@@ -119,7 +138,9 @@ export class SchedulingService {
     avEnd.setHours(endHour, endMin, 0, 0);
 
     if (startsAt < avStart || endsAt > avEnd) {
-      throw new BadRequestException('Horário fora da disponibilidade de atendimento do profissional');
+      throw new BadRequestException(
+        'Horário fora da disponibilidade de atendimento do profissional',
+      );
     }
 
     // Run selective FOR UPDATE transaction to lock and prevent double-booking
@@ -162,7 +183,10 @@ export class SchedulingService {
     });
 
     // Call notification triggers outside of the transaction
-    await this.notificationsService.handleAppointmentCreated(appointment.id, appointment.startsAt);
+    await this.notificationsService.handleAppointmentCreated(
+      appointment.id,
+      appointment.startsAt,
+    );
 
     return appointment;
   }
@@ -179,8 +203,23 @@ export class SchedulingService {
       throw new NotFoundException('Agendamento não encontrado');
     }
 
-    if (requestingUser && requestingUser.role === 'PATIENT' && appointment.patientId !== requestingUser.id) {
-      throw new ForbiddenException('Não autorizado a cancelar agendamento de outro paciente');
+    if (
+      requestingUser &&
+      requestingUser.role === 'PATIENT' &&
+      appointment.patientId !== requestingUser.id
+    ) {
+      throw new ForbiddenException(
+        'Não autorizado a cancelar agendamento de outro paciente',
+      );
+    }
+
+    if (
+      appointment.status === 'COMPLETED' ||
+      new Date(appointment.startsAt) < new Date()
+    ) {
+      throw new BadRequestException(
+        'Não é possível cancelar uma consulta que já passou ou foi realizada',
+      );
     }
 
     if (appointment.status === 'CANCELLED') {
@@ -204,12 +243,19 @@ export class SchedulingService {
       throw new NotFoundException('Agendamento não encontrado');
     }
 
-    return this.prisma.appointment.update({
+    const updatedAppointment = await this.prisma.appointment.update({
       where: { id },
       data: {
         status: 'CONFIRMED',
       },
     });
+
+    // Trigger confirmation notification via email queue
+    await this.notificationsService.handleAppointmentConfirmed(
+      updatedAppointment.id,
+    );
+
+    return updatedAppointment;
   }
 
   async listAppointments(filters: {
