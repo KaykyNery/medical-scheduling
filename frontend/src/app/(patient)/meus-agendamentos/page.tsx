@@ -12,7 +12,7 @@ interface Appointment {
   id: string;
   startsAt: string;
   endsAt: string;
-  status: 'SCHEDULED' | 'CONFIRMED' | 'CANCELLED';
+  status: 'SCHEDULED' | 'CONFIRMED' | 'CANCELLED' | 'COMPLETED' | 'NO_SHOW';
   notes?: string;
   cancelReason?: string;
   professional: {

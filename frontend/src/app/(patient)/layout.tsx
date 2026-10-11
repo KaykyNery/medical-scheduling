@@ -1,11 +1,12 @@
 'use client';
 
 import React from 'react';
-import { useSession, signOut } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Calendar, CalendarPlus, LogOut, Menu } from 'lucide-react';
+import { Calendar, CalendarPlus, Menu } from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
+import { UserDropdown } from '@/components/UserDropdown';
 
 export default function PatientLayout({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
@@ -56,17 +57,6 @@ export default function PatientLayout({ children }: { children: React.ReactNode 
             );
           })}
         </nav>
-
-        {/* Sidebar Footer / User section */}
-        <div className="p-4 border-t border-border">
-          <button
-            onClick={() => signOut({ callbackUrl: '/login' })}
-            className="w-full flex items-center gap-4 px-4 py-3 text-muted-foreground hover:text-rose-500 hover:bg-rose-500/5 rounded-xl transition-all"
-          >
-            <LogOut size={20} />
-            {sidebarOpen && <span>Sair</span>}
-          </button>
-        </div>
       </aside>
 
       {/* Main Content Area */}
@@ -76,7 +66,7 @@ export default function PatientLayout({ children }: { children: React.ReactNode 
           <div className="flex items-center gap-4">
             <button
               onClick={toggleSidebar}
-              className="p-2 hover:bg-muted rounded-lg text-muted-foreground hover:text-foreground transition-colors"
+              className="p-2 hover:bg-muted rounded-lg text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
             >
               <Menu size={20} />
             </button>
@@ -85,15 +75,7 @@ export default function PatientLayout({ children }: { children: React.ReactNode 
             </h2>
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="flex flex-col text-right">
-              <span className="text-sm font-semibold text-foreground">{session?.user?.name}</span>
-              <span className="text-xs text-muted-foreground">Paciente</span>
-            </div>
-            <div className="w-10 h-10 bg-primary/10 text-primary rounded-full flex items-center justify-center font-bold border border-primary/20">
-              {session?.user?.name?.charAt(0)}
-            </div>
-          </div>
+          <UserDropdown />
         </header>
 
         {/* Page children container */}

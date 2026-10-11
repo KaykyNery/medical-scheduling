@@ -6,14 +6,14 @@ Esta página descreve os detalhes de conexão para acessar a base de dados do si
 
 ### Usuário Padrão (Acesso do Aplicativo)
 - **Host**: `localhost`
-- **Porta**: `3306`
+- **Porta**: `3307`
 - **Banco de Dados**: `agendamento`
 - **Usuário**: `user`
 - **Senha**: `password`
 
 ### Usuário Administrador (Root)
 - **Host**: `localhost`
-- **Porta**: `3306`
+- **Porta**: `3307`
 - **Banco de Dados**: `agendamento`
 - **Usuário**: `root`
 - **Senha**: `rootpassword`
@@ -28,7 +28,7 @@ Esta página descreve os detalhes de conexão para acessar a base de dados do si
    - **Connection Name**: `Clínica Diamantina`
    - **Connection Method**: `Standard (TCP/IP)`
    - **Hostname**: `localhost`
-   - **Port**: `3306`
+   - **Port**: `3307`
    - **Username**: `user` (ou `root` para acesso completo)
 4. Clique em **"Store in Vault..."** no campo *Password* e insira a senha correspondente (`password` para o usuário `user`, ou `rootpassword` para o usuário `root`).
 5. No campo **Default Schema**, preencha com `agendamento`.
