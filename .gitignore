@@ -67,6 +67,7 @@ pnpm-debug.log*
 *.bak
 *.backup
 *.tmp
+DATABASE_CONNECTION.md
 
 # Typescript build info
 *.tsbuildinfo
