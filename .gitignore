@@ -46,18 +46,27 @@ pnpm-debug.log*
 .nyc_output/
 
 # Env & Secrets (Never commit secrets/credentials to git!)
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-**/.env
-**/.env.local
-**/.env.development.local
-**/.env.test.local
-**/.env.production.local
+.env*
+!.env.example
+**/.env*
+!**/.env.example
 *.pem
 *.key
+*.cert
+*.crt
+*.pfx
+*.p12
+*.id_rsa
+*.id_ed25519
+
+# Database dumps, sqlite & backups (excluding Prisma migration files)
+*.sqlite
+*.sqlite3
+*.db
+*.dump
+*.bak
+*.backup
+*.tmp
 
 # Typescript build info
 *.tsbuildinfo

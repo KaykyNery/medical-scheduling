@@ -27,7 +27,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
           ? (exceptionResponse as any).message
           : exception.message;
     } else if (exception instanceof Error) {
-      message = exception.message;
+      console.error('[HttpExceptionFilter] Unhandled Error:', exception);
+      message =
+        process.env.NODE_ENV === 'production'
+          ? 'Erro interno no servidor'
+          : exception.message;
     }
 
     response.status(status).json({

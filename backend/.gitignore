@@ -29,11 +29,10 @@ pids
 *.tsbuildinfo
 
 # Env & Secrets
-.env
-.env.development
-.env.test
-.env.production
-.env.local
+.env*
+!.env.example
+*.pem
+*.key
 
 # IDEs
 .vscode/

@@ -18,6 +18,7 @@ import { RegisterDto } from './dto/register.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RegisterThrottlerGuard } from './guards/register-throttler.guard';
+import { LoginThrottlerGuard } from './guards/login-throttler.guard';
 import {
   ApiTags,
   ApiOperation,
@@ -58,7 +59,11 @@ export class AuthController {
     description: 'Return JWT access and refresh tokens',
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @UseGuards(LocalAuthGuard)
+  @ApiResponse({
+    status: 429,
+    description: 'Too Many Requests: Rate limit exceeded',
+  })
+  @UseGuards(LoginThrottlerGuard, LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
   @ApiBody({ type: LoginDto })
   @Post('login')
@@ -74,6 +79,11 @@ export class AuthController {
   @ApiOperation({ summary: 'Refresh JWT access and refresh tokens' })
   @ApiResponse({ status: 200, description: 'Return new JWT tokens' })
   @ApiResponse({ status: 401, description: 'Invalid refresh token' })
+  @ApiResponse({
+    status: 429,
+    description: 'Too Many Requests: Rate limit exceeded',
+  })
+  @UseGuards(LoginThrottlerGuard)
   @HttpCode(HttpStatus.OK)
   @Post('refresh')
   async refresh(@Body() refreshDto: RefreshDto) {

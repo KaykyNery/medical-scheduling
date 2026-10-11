@@ -7,6 +7,8 @@ export default auth((req) => {
 
   const isAdminRoute = nextUrl.pathname.startsWith("/agenda") || 
                        nextUrl.pathname.startsWith("/pacientes") || 
+                       nextUrl.pathname.startsWith("/medicos") || 
+                       nextUrl.pathname.startsWith("/procedimentos") || 
                        nextUrl.pathname.startsWith("/relatorios");
 
   const isPatientRoute = nextUrl.pathname.startsWith("/meu-agendamento") || 
@@ -36,6 +38,8 @@ export const config = {
   matcher: [
     "/agenda/:path*",
     "/pacientes/:path*",
+    "/medicos/:path*",
+    "/procedimentos/:path*",
     "/relatorios/:path*",
     "/meu-agendamento/:path*",
     "/meus-agendamentos/:path*"

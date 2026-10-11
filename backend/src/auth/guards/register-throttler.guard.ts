@@ -12,7 +12,14 @@ const ipRequests = new Map<string, { count: number; resetTime: number }>();
 export class RegisterThrottlerGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
-    const ip = request.ip || request.headers['x-forwarded-for'] || 'unknown';
+    const forwarded = request.headers['x-forwarded-for'];
+    const ip =
+      (Array.isArray(forwarded) ? forwarded[0] : forwarded)
+        ?.split(',')[0]
+        .trim() ||
+      request.ip ||
+      request.socket?.remoteAddress ||
+      'unknown';
 
     const now = Date.now();
     const windowMs = 60 * 1000; // 1 minuto
